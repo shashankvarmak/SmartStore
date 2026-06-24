@@ -2,7 +2,7 @@ package com.smartstore.backend.controller;
 
 import com.smartstore.backend.dto.ProductRequest;
 import com.smartstore.backend.dto.ProductResponse;
-import com.smartstore.backend.repository.ProductRepository;
+import com.smartstore.backend.dto.StockQuantityRequest;
 import com.smartstore.backend.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +54,26 @@ public class ProductController {
     public List<ProductResponse> getLowStockProducts() {
 
         return productService.getLowStockProducts();
+    }
+    @PutMapping("/{id}/add-stock")
+    public ProductResponse addStock(
+            @PathVariable Long id,
+            @RequestBody StockQuantityRequest request) {
+
+        return productService.addStock(
+                id,
+                request.getQuantity()
+        );
+    }
+    @PutMapping("/{id}/reduce-stock")
+    public ProductResponse reduceStock(
+            @PathVariable Long id,
+            @RequestBody StockQuantityRequest request) {
+
+        return productService.reduceStock(
+                id,
+                request.getQuantity()
+        );
     }
 }
 

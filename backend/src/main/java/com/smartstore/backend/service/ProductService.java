@@ -127,4 +127,40 @@ public class ProductService {
 
         return lowStockProducts;
     }
+    public ProductResponse addStock(
+            Long id,
+            Integer quantity) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found"));
+
+        product.setStockQuantity(
+                product.getStockQuantity() + quantity
+        );
+
+        Product updated = productRepository.save(product);
+
+        return mapToResponse(updated);
+    }
+    public ProductResponse reduceStock(
+            Long id,
+            Integer quantity) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found"));
+
+        if (product.getStockQuantity() < quantity) {
+            throw new RuntimeException("Insufficient stock");
+        }
+
+        product.setStockQuantity(
+                product.getStockQuantity() - quantity
+        );
+
+        Product updated = productRepository.save(product);
+
+        return mapToResponse(updated);
+    }
 }
