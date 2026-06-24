@@ -6,6 +6,7 @@ import com.smartstore.backend.dto.RegisterRequest;
 import com.smartstore.backend.entity.User;
 import com.smartstore.backend.enums.Role;
 import com.smartstore.backend.repository.UserRepository;
+import com.smartstore.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
 
     public AuthResponse register(RegisterRequest request) {
@@ -49,6 +51,8 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return new AuthResponse("Login Successful");
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new AuthResponse(token);
     }
 }
