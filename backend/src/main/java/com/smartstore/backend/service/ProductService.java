@@ -8,6 +8,8 @@ import com.smartstore.backend.repository.CategoryRepository;
 import com.smartstore.backend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,38 +31,22 @@ public class ProductService {
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .stockQuantity(request.getStockQuantity())
+                .minimumStock(request.getMinimumStock())
+                .reservedStock(0)
                 .imageUrl(request.getImageUrl())
                 .category(category)
                 .build();
 
         Product saved = productRepository.save(product);
 
-        return new ProductResponse(
-                saved.getId(),
-                saved.getName(),
-                saved.getDescription(),
-                saved.getPrice(),
-                saved.getStockQuantity(),
-                saved.getImageUrl(),
-                saved.getCategory().getId(),
-                saved.getCategory().getName()
-        );
+        return mapToResponse(saved);
     }
 
     public List<ProductResponse> getAllProducts() {
 
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getStockQuantity(),
-                        product.getImageUrl(),
-                        product.getCategory().getId(),
-                        product.getCategory().getName()
-                ))
+                .map(this::mapToResponse)
                 .toList();
     }
 
@@ -70,16 +56,7 @@ public class ProductService {
                 .orElseThrow(() ->
                         new RuntimeException("Product not found"));
 
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getStockQuantity(),
-                product.getImageUrl(),
-                product.getCategory().getId(),
-                product.getCategory().getName()
-        );
+        return mapToResponse(product);
     }
 
     public ProductResponse updateProduct(
@@ -99,21 +76,13 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
+        product.setMinimumStock(request.getMinimumStock());
         product.setImageUrl(request.getImageUrl());
         product.setCategory(category);
 
         Product updated = productRepository.save(product);
 
-        return new ProductResponse(
-                updated.getId(),
-                updated.getName(),
-                updated.getDescription(),
-                updated.getPrice(),
-                updated.getStockQuantity(),
-                updated.getImageUrl(),
-                updated.getCategory().getId(),
-                updated.getCategory().getName()
-        );
+        return mapToResponse(updated);
     }
 
     public void deleteProduct(Long id) {
@@ -124,6 +93,38 @@ public class ProductService {
 
         productRepository.delete(product);
     }
+
+    private ProductResponse mapToResponse(Product product) {
+
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStockQuantity(),
+                product.getMinimumStock(),
+                product.getReservedStock(),
+                product.getStockQuantity() - product.getReservedStock(),
+                product.getImageUrl(),
+                product.getCategory().getId(),
+                product.getCategory().getName()
+        );
+    }
+
+    public List<ProductResponse> getLowStockProducts() {
+
+        List<Product> products = productRepository.findAll();
+
+        List<ProductResponse> lowStockProducts = new ArrayList<>();
+
+        for (Product product : products) {
+
+            if (product.getStockQuantity() <= product.getMinimumStock()) {
+
+                lowStockProducts.add(mapToResponse(product));
+            }
+        }
+
+        return lowStockProducts;
+    }
 }
-
-

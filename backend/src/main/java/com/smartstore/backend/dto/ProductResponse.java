@@ -18,6 +18,9 @@ public class ProductResponse {
     private BigDecimal price;
 
     private Integer stockQuantity;
+    private Integer minimumStock;
+    private Integer reservedStock;
+    private Integer availableStock;
 
     private String imageUrl;
 

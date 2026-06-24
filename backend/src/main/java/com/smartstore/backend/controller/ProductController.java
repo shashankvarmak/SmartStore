@@ -2,6 +2,7 @@ package com.smartstore.backend.controller;
 
 import com.smartstore.backend.dto.ProductRequest;
 import com.smartstore.backend.dto.ProductResponse;
+import com.smartstore.backend.repository.ProductRepository;
 import com.smartstore.backend.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,11 @@ public class ProductController {
         productService.deleteProduct(id);
 
         return "Product Deleted Successfully";
+    }
+    @GetMapping("/low-stock")
+    public List<ProductResponse> getLowStockProducts() {
+
+        return productService.getLowStockProducts();
     }
 }
 
