@@ -1,0 +1,26 @@
+package com.smartstore.backend.controller;
+
+import com.smartstore.backend.dto.DashboardResponse;
+import com.smartstore.backend.service.DashboardService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/dashboard")
+@RequiredArgsConstructor
+public class DashboardController {
+
+
+    private final DashboardService dashboardService;
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public DashboardResponse getDashboard() {
+
+        return dashboardService.getDashboard();
+    }
+}

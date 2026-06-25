@@ -28,6 +28,7 @@ public class Product {
     private BigDecimal price;
 
     private Integer stockQuantity;
+    @Column(nullable = false)
     private Integer minimumStock;
     private Integer reservedStock;
 

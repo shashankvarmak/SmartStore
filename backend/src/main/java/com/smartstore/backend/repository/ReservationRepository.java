@@ -12,6 +12,7 @@ public interface ReservationRepository
 
     List<Reservation> findByStatus(ReservationStatus status);
     List<Reservation> findByUserId(Long userId);
+    long countByStatus(ReservationStatus status);
 
 
 }

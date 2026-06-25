@@ -30,6 +30,14 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+    public List<ProductResponse> searchProducts(
+            @RequestParam String keyword) {
+
+        return productService.searchProducts(keyword);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     public ProductResponse getProductById(
@@ -83,5 +91,7 @@ public class ProductController {
                 request.getQuantity()
         );
     }
+
+
 }
 
