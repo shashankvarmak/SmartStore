@@ -5,6 +5,7 @@ import com.smartstore.backend.dto.ProductResponse;
 import com.smartstore.backend.dto.StockQuantityRequest;
 import com.smartstore.backend.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse createProduct(
             @RequestBody ProductRequest request) {
 
@@ -23,11 +25,13 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     public ProductResponse getProductById(
             @PathVariable Long id) {
 
@@ -35,6 +39,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse updateProduct(
             @PathVariable Long id,
             @RequestBody ProductRequest request) {
@@ -43,6 +48,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteProduct(
             @PathVariable Long id) {
 
@@ -56,6 +62,7 @@ public class ProductController {
         return productService.getLowStockProducts();
     }
     @PutMapping("/{id}/add-stock")
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse addStock(
             @PathVariable Long id,
             @RequestBody StockQuantityRequest request) {
@@ -66,6 +73,7 @@ public class ProductController {
         );
     }
     @PutMapping("/{id}/reduce-stock")
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductResponse reduceStock(
             @PathVariable Long id,
             @RequestBody StockQuantityRequest request) {

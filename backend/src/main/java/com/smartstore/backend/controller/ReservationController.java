@@ -40,5 +40,18 @@ public class ReservationController {
         return reservationService
                 .completeReservation(reservationId);
     }
+    @PutMapping("/{reservationId}/cancel")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ReservationResponse cancelReservation(
+            @PathVariable Long reservationId) {
+
+        return reservationService.cancelReservation(reservationId);
+    }
+    @GetMapping
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public List<ReservationResponse> getMyReservations() {
+
+        return reservationService.getMyReservations();
+    }
 
 }

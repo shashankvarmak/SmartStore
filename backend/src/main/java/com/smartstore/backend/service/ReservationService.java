@@ -271,5 +271,60 @@ public class ReservationService {
 
         return mapToResponse(reservation);
     }
+    private void validateCancelableReservation(
+            Reservation reservation) {
+
+        if (reservation.getStatus() == ReservationStatus.COMPLETED ||
+                reservation.getStatus() == ReservationStatus.CANCELLED) {
+
+            throw new RuntimeException(
+                    "This reservation cannot be cancelled.");
+        }
+    }
+    private void releaseReservedStock(
+            List<ReservationItem> reservationItems) {
+
+        for (ReservationItem reservationItem : reservationItems) {
+
+            Product product = reservationItem.getProduct();
+
+            product.setReservedStock(
+                    product.getReservedStock()
+                            - reservationItem.getQuantity()
+            );
+
+            productRepository.save(product);
+        }
+    }
+    @Transactional
+    public ReservationResponse cancelReservation(
+            Long reservationId) {
+
+        Reservation reservation =
+                findReservation(reservationId);
+
+        validateCancelableReservation(reservation);
+
+        List<ReservationItem> reservationItems =
+                getReservationItems(reservation);
+
+        releaseReservedStock(reservationItems);
+
+        reservation.setStatus(ReservationStatus.CANCELLED);
+
+        reservationRepository.save(reservation);
+
+        return mapToResponse(reservation);
+    }
+
+    public List<ReservationResponse> getMyReservations() {
+
+        User user = getLoggedInUser();
+
+        return reservationRepository.findByUserId(user.getId())
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
 
 }
