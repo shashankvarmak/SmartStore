@@ -8,6 +8,8 @@ import com.smartstore.backend.exception.SmartStoreException;
 import com.smartstore.backend.repository.CategoryRepository;
 import com.smartstore.backend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -46,12 +48,11 @@ public class ProductService {
         return mapToResponse(saved);
     }
 
-    public List<ProductResponse> getAllProducts() {
-
-        return productRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+    public Page<ProductResponse> getAllProducts(
+            Pageable pageable) {
+        return productRepository
+                .findAll(pageable)
+                .map(this::mapToResponse);
     }
 
     public ProductResponse getProductById(Long id) {
