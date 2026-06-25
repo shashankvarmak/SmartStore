@@ -3,6 +3,7 @@ package com.smartstore.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,6 +23,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "cart")
-    private List<CartItem> items;
+    private List<CartItem> items = new ArrayList<>();
 }
