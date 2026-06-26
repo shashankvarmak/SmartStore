@@ -17,6 +17,9 @@ import Categories from "../pages/admin/Categories";
 import Inventory from "../pages/admin/Inventory";
 import AdminReservations from "../pages/admin/Reservations";
 
+import CustomerLayout from "../layout/CustomerLayout";
+import AdminLayout from "../layout/AdminLayout";
+
 function AppRoutes() {
     return (
         <BrowserRouter>
@@ -24,25 +27,34 @@ function AppRoutes() {
 
                 {/* Public */}
 
-                <Route path="/" element={<Home />} />
+
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
                 {/* Customer */}
 
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetails />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/reservations" element={<Reservations />} />
-                <Route path="/profile" element={<Profile />} />
+                    <Route path="/" element={<CustomerLayout />}>
+                                    <Route index element={<Home />} />
+                                    <Route path="products" element={<Products />} />
+                                    <Route path="products/:id" element={<ProductDetails />} />
+                                    <Route path="cart" element={<Cart />} />
+                                    <Route path="reservations" element={<Reservations />} />
+                                    <Route path="profile" element={<Profile />} />
+                    </Route>
+
+
+
 
                 {/* Admin */}
+                <Route path="/admin" element={<AdminLayout />}>
 
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/products" element={<AdminProducts />} />
-                <Route path="/admin/categories" element={<Categories />} />
-                <Route path="/admin/inventory" element={<Inventory />} />
-                <Route path="/admin/reservations" element={<AdminReservations />} />
+
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="categories" element={<Categories />} />
+                <Route path="inventory" element={<Inventory />} />
+                <Route path="reservations" element={<AdminReservations />} />
+                </Route>
 
             </Routes>
         </BrowserRouter>
