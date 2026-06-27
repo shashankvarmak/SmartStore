@@ -36,6 +36,7 @@ public class ProductService {
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
+                .unit(request.getUnit())
                 .stockQuantity(request.getStockQuantity())
                 .minimumStock(request.getMinimumStock())
                 .reservedStock(0)
@@ -88,6 +89,7 @@ public class ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
+        product.setUnit(request.getUnit());
         product.setStockQuantity(request.getStockQuantity());
         product.setMinimumStock(request.getMinimumStock());
         product.setImageUrl(request.getImageUrl());
@@ -188,6 +190,7 @@ public class ProductService {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getUnit(),
                 product.getStockQuantity(),
                 product.getMinimumStock(),
                 product.getReservedStock(),

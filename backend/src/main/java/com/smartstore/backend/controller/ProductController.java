@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+
     public Page<ProductResponse> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+
     public List<ProductResponse> searchProducts(
             @RequestParam String keyword) {
 
@@ -55,7 +55,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+
     public ProductResponse getProductById(
             @PathVariable Long id) {
 

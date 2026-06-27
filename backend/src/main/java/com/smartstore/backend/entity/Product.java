@@ -27,6 +27,9 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = false)
+    private String unit;
+
     private Integer stockQuantity;
     @Column(nullable = false)
     private Integer minimumStock;

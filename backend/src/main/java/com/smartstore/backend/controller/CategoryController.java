@@ -25,11 +25,10 @@ public class CategoryController {
         return categoryService.createCategory(request);
     }
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     public List<CategoryResponse> getAllCategories() {
         return categoryService.getAllCategories();
     }
-    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+
     @GetMapping("/{id}")
     public CategoryResponse getCategoryById(
             @PathVariable Long id) {

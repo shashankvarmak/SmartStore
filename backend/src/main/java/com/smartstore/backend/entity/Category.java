@@ -23,10 +23,7 @@ public class Category {
 
     private String description;
 
-    private LocalDateTime createdAt;
+    private String imageUrl;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
+
 }

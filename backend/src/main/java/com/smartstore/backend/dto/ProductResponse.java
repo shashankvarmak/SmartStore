@@ -16,6 +16,7 @@ public class ProductResponse {
     private String description;
 
     private BigDecimal price;
+    private String unit;
 
     private Integer stockQuantity;
     private Integer minimumStock;

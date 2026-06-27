@@ -23,6 +23,7 @@ public class CategoryService {
 
         Category category = Category.builder()
                 .name(request.getName())
+                .imageUrl(request.getImageUrl())
                 .description(request.getDescription())
                 .build();
 
@@ -31,7 +32,8 @@ public class CategoryService {
         return new CategoryResponse(
                 saved.getId(),
                 saved.getName(),
-                saved.getDescription()
+                saved.getDescription(),
+                saved.getImageUrl()
         );
 
     }
@@ -44,7 +46,8 @@ public class CategoryService {
                 .map(category -> new CategoryResponse(
                         category.getId(),
                         category.getName(),
-                        category.getDescription()
+                        category.getDescription(),
+                        category.getImageUrl()
                 ))
                 .toList();
     }
@@ -57,7 +60,8 @@ public class CategoryService {
         return new CategoryResponse(
                 category.getId(),
                 category.getName(),
-                category.getDescription()
+                category.getDescription(),
+                category.getImageUrl()
         );
     }
 
@@ -70,13 +74,15 @@ public class CategoryService {
 
         category.setName(request.getName());
         category.setDescription(request.getDescription());
+        category.setImageUrl(request.getImageUrl());
 
         Category updated = categoryRepository.save(category);
 
         return new CategoryResponse(
                 updated.getId(),
                 updated.getName(),
-                updated.getDescription()
+                updated.getDescription(),
+                updated.getImageUrl()
         );
     }
 
