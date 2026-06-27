@@ -9,7 +9,6 @@ import Products from "../pages/customer/Products";
 import Cart from "../pages/customer/Cart";
 import Reservations from "../pages/customer/Reservations";
 import Profile from "../pages/customer/Profile";
-import ProductDetails from "../pages/customer/ProductDetails";
 
 import Dashboard from "../pages/admin/Dashboard";
 import AdminProducts from "../pages/admin/Products";
@@ -19,6 +18,7 @@ import AdminReservations from "../pages/admin/Reservations";
 
 import CustomerLayout from "../layout/CustomerLayout";
 import AdminLayout from "../layout/AdminLayout";
+import ProtectedRoute from "../auth/ProtectedRoute";
 
 function AppRoutes() {
     return (
@@ -36,10 +36,28 @@ function AppRoutes() {
                     <Route path="/" element={<CustomerLayout />}>
                                     <Route index element={<Home />} />
                                     <Route path="products" element={<Products />} />
-                                    <Route path="products/:id" element={<ProductDetails />} />
-                                    <Route path="cart" element={<Cart />} />
-                                    <Route path="reservations" element={<Reservations />} />
-                                    <Route path="profile" element={<Profile />} />
+
+                                    <Route
+                                        path="cart"
+                                        element={
+                                            <ProtectedRoute>
+                                                <Cart />
+                                            </ProtectedRoute>
+                                        }
+                                    />
+                                    <Route path="reservations" element={
+                                        <ProtectedRoute>
+                                            <Reservations />
+                                        </ProtectedRoute>
+                                            } />
+                                    <Route
+                                        path="profile"
+                                        element={
+                                            <ProtectedRoute>
+                                                <Profile />
+                                            </ProtectedRoute>
+                                        }
+                                    />
                     </Route>
 
 
