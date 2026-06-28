@@ -26,6 +26,6 @@ public class ReservationItem {
 
     private Integer quantity;
 
-    private Double price;
+    private Double priceAtReservation;
 }
 

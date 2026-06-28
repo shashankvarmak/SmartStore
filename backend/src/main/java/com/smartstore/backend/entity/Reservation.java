@@ -32,8 +32,13 @@ public class Reservation {
 
     private LocalDateTime reservationDate;
 
-    @OneToMany(mappedBy = "reservation")
+    @OneToMany(
+            mappedBy = "reservation",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<ReservationItem> items;
+
 
     @PrePersist
     public void prePersist() {

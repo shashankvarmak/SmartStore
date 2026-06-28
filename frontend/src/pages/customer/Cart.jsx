@@ -5,6 +5,9 @@ import {
     updateCartItem,
     clearCart
 } from "../../services/cartService";
+import { Link } from 'react-router-dom';
+import { createReservation } from "../../services/reservationService";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
 
@@ -13,6 +16,42 @@ function Cart() {
     const [loading, setLoading] = useState(true);
 
     const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const handleReservation = async () => {
+
+        if (cart.items.length === 0) {
+
+            alert("Your cart is empty.");
+
+            return;
+
+        }
+
+        try {
+
+            const response = await createReservation();
+
+            console.log(response.data);
+
+            alert("Reservation created successfully.");
+
+            navigate("/reservations");
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            console.log(error.response?.status);
+
+            console.log(error.response?.data);
+
+            alert(error.response?.data || "Unable to create reservation.");
+
+        }
+
+    };
 
     useEffect(() => {
 
@@ -370,15 +409,17 @@ function Cart() {
 
                                 </div>
 
-                                <button
+                               <button
 
-                                    className="mt-8 w-full rounded-xl bg-emerald-600 py-4 font-semibold text-white transition hover:bg-emerald-700"
+                                   onClick={handleReservation}
 
-                                >
+                                   className="mt-8 w-full rounded-xl bg-emerald-600 py-4 font-semibold text-white transition hover:bg-emerald-700"
 
-                                    Proceed to Reservation
+                               >
 
-                                </button>
+                                   Proceed to Reservation
+
+                               </button>
 
                             </div>
 

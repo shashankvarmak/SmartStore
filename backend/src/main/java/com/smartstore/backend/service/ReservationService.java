@@ -145,7 +145,7 @@ public class ReservationService {
                     .reservation(reservation)
                     .product(cartItem.getProduct())
                     .quantity(cartItem.getQuantity())
-                    .price(cartItem.getProduct().getPrice().doubleValue())
+                    .priceAtReservation(cartItem.getProduct().getPrice().doubleValue())
                     .build();
 
             reservationItemRepository.save(reservationItem);
