@@ -32,7 +32,6 @@ public class CartService {
                 .getAuthentication();
 
         String email = authentication.getName();
-
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
@@ -74,15 +73,23 @@ public class CartService {
 
         if (cartItem != null) {
 
-            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            int newQuantity = cartItem.getQuantity() + quantity;
 
-        } else {
+            validateStock(product, newQuantity);
+
+            cartItem.setQuantity(newQuantity);
+
+        }
+        else {
+
+            validateStock(product, quantity);
 
             cartItem = CartItem.builder()
                     .cart(cart)
                     .product(product)
                     .quantity(quantity)
                     .build();
+
         }
 
         cartItemRepository.save(cartItem);
@@ -95,18 +102,16 @@ public class CartService {
 
         Product product = cartItem.getProduct();
 
-        if (quantity < 0) {
-            throw new RuntimeException("Quantity cannot be negative.");
-        }
-
-        if (quantity == 0) {
+        if (quantity <= 0) {
 
             Cart cart = cartItem.getCart();
 
             cartItemRepository.delete(cartItem);
 
             return buildCartResponse(cart);
+
         }
+
 
         validateStock(product, quantity);
 
@@ -118,34 +123,63 @@ public class CartService {
     }
     private CartResponse buildCartResponse(Cart cart) {
 
-        List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
+        List<CartItem> cartItems =
+                cartItemRepository.findByCartId(cart.getId());
 
         List<CartItemResponse> items = new ArrayList<>();
 
         double totalAmount = 0;
 
+        int totalItems = 0;
+
         for (CartItem cartItem : cartItems) {
 
-            double totalPrice = cartItem.getQuantity()
-                    * cartItem.getProduct().getPrice().doubleValue();
+            double totalPrice =
+                    cartItem.getQuantity()
+                            * cartItem.getProduct().getPrice().doubleValue();
 
             totalAmount += totalPrice;
 
-            items.add(new CartItemResponse(
-                    cartItem.getId(),
-                    cartItem.getProduct().getId(),
-                    cartItem.getProduct().getName(),
-                    cartItem.getQuantity(),
-                    cartItem.getProduct().getPrice().doubleValue(),
-                    totalPrice
-            ));
+            totalItems += cartItem.getQuantity();
+
+            items.add(
+
+                    new CartItemResponse(
+
+                            cartItem.getId(),
+
+                            cartItem.getProduct().getId(),
+
+                            cartItem.getProduct().getName(),
+
+                            cartItem.getProduct().getImageUrl(),
+
+                            cartItem.getProduct().getUnit(),
+
+                            cartItem.getQuantity(),
+
+                            cartItem.getProduct().getPrice().doubleValue(),
+
+                            totalPrice
+
+                    )
+
+            );
+
         }
 
         return new CartResponse(
+
                 cart.getId(),
+
                 items,
+
+                totalItems,
+
                 totalAmount
+
         );
+
     }
     public CartResponse addToCart(AddToCartRequest request) {
 
@@ -154,8 +188,6 @@ public class CartService {
         Cart cart = getOrCreateCart(user);
 
         Product product = findProduct(request.getProductId());
-
-        validateStock(product, request.getQuantity());
 
         addOrUpdateCartItem(cart, product, request.getQuantity());
 

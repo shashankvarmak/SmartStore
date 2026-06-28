@@ -28,7 +28,7 @@ public class CartController {
 
         return cartService.getCart();
     }
-    @PutMapping("/item/{cartItemId}")
+    @PutMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('CUSTOMER')")
     public CartResponse updateCartItem(
             @PathVariable Long cartItemId,
@@ -39,7 +39,7 @@ public class CartController {
                 request.getQuantity()
         );
     }
-    @DeleteMapping
+    @DeleteMapping("/clear")
     @PreAuthorize("hasRole('CUSTOMER')")
     public CartResponse clearCart() {
 

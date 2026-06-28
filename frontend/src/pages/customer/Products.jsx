@@ -2,22 +2,170 @@ import { useEffect, useState } from "react";
 
 import ProductCard from "../../components/ui/ProductCard";
 
-import { getAllProducts } from "../../services/productService";
+import { searchProducts,getAllProducts } from "../../services/productService";
+
+import { useSearchParams } from "react-router-dom";
+
+import { addToCart } from "../../services/cartService";
+
+import CartBar from "../../components/cart/CartBar";
+
+import toast from "react-hot-toast";
+
+import { getCart,   updateCartItem } from "../../services/cartService";
 
 function Products() {
 
     const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState(null);
     const [productPage, setProductPage] = useState(null);
 
     const [loading, setLoading] = useState(true);
 
     const [error, setError] = useState("");
+    const [searchParams] = useSearchParams();
+
+    const keyword = searchParams.get("search") || "";
+
+    const handleAddToCart = async (productId) => {
+
+        try {
+
+            const request = {
+
+                productId,
+
+                quantity: 1
+
+            };
+
+            const response = await addToCart(request);
+            setCart(response.data);
+
+            console.log(response.data);
+
+            toast.success("Product added to cart.");
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            console.log(error.response);
+
+            console.log(error.response?.data);
+
+            console.log(error.response?.status);
+
+            alert("Unable to add product to cart.");
+
+        }
+
+    };
+    const fetchCart = async () => {
+
+        try {
+
+            const response = await getCart();
+
+            setCart(response.data);
+            console.log("Cart:", response.data);
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+    const getCartItem = (productId) => {
+
+        return cart?.items?.find(
+
+            item => item.productId === productId
+
+        );
+
+    };
+    const getQuantity = (productId) => {
+
+        const item = getCartItem(productId);
+
+        return item ? item.quantity : 0;
+
+    };
+    const handleIncrease = async (productId) => {
+
+        const cartItem = getCartItem(productId);
+
+        if (!cartItem) return;
+
+        try {
+
+            const response = await updateCartItem(
+
+                cartItem.cartItemId,
+
+                cartItem.quantity + 1
+
+            );
+
+            setCart(response.data);
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+    const handleDecrease = async (productId) => {
+
+        const cartItem = getCartItem(productId);
+
+        if (!cartItem) return;
+
+        try {
+
+            const response = await updateCartItem(
+
+                cartItem.cartItemId,
+
+                cartItem.quantity - 1
+
+            );
+
+            setCart(response.data);
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
 
     useEffect(() => {
 
-        fetchProducts();
+        if (keyword.trim() === "") {
 
-    }, []);
+            fetchProducts();
+            fetchCart();
+
+        } else {
+
+            fetchSearchProducts(keyword);
+
+        }
+
+    }, [keyword]);
 
     const fetchProducts = async () => {
 
@@ -43,6 +191,25 @@ function Products() {
         finally {
 
             setLoading(false);
+
+        }
+
+    };
+    const fetchSearchProducts = async (keyword) => {
+
+        try {
+
+            const response = await searchProducts(keyword);
+
+            setProducts(response.data);
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            setError("Unable to search products.");
 
         }
 
@@ -77,6 +244,7 @@ function Products() {
     }
 
     return (
+        <>
 
         <section className="mx-auto mt-16 max-w-7xl px-6">
 
@@ -91,6 +259,7 @@ function Products() {
                 Browse fresh products available for reservation.
 
             </p>
+
 
             {
 
@@ -117,17 +286,17 @@ function Products() {
                                 products.map(product => (
 
                                     <ProductCard
-
                                         key={product.id}
-
+                                        id={product.id}
                                         name={product.name}
-
                                         price={product.price}
-
                                         unit={product.unit}
-
                                         imageUrl={product.imageUrl}
-
+                                        quantity={getQuantity(product.id)}
+                                        availableStock={product.stockQuantity - product.reservedStock}
+                                        onAddToCart={handleAddToCart}
+                                        onIncrease={handleIncrease}
+                                        onDecrease={handleDecrease}
                                     />
 
                                 ))
@@ -140,7 +309,14 @@ function Products() {
 
             }
 
+
         </section>
+
+        <CartBar
+                    totalItems={cart?.totalItems ?? 0}
+                    totalAmount={cart?.totalAmount ?? 0}
+                />
+        </>
 
     );
 

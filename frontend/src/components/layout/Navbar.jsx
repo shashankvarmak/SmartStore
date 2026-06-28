@@ -1,10 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function Navbar() {
 
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
+
+   const location = useLocation();
+
+   const isProductsPage = location.pathname === "/products";
+   const [searchTerm, setSearchTerm] = useState("");
+
+
 
     const handleLogout = () => {
 
@@ -53,15 +62,27 @@ function Navbar() {
 
                 </li>
 
-                <li>
+                {
+                    isProductsPage && (
 
-                    <input
-                        type="text"
-                        placeholder="Search products..."
-                        className="rounded-full border border-slate-300 px-4 py-2 outline-none transition focus:border-emerald-500"
-                    />
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={searchTerm}
+                            onChange={(event) => {
 
-                </li>
+                                const value = event.target.value;
+
+                                setSearchTerm(value);
+
+                                navigate(`/products?search=${encodeURIComponent(value)}`);
+
+                            }}
+                            className="rounded-full border border-slate-300 px-4 py-2 outline-none focus:border-emerald-500"
+                        />
+
+                    )
+                }
 
             </ul>
 

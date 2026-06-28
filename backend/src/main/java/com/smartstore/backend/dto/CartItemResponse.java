@@ -13,6 +13,10 @@ public class CartItemResponse {
 
     private String productName;
 
+    private String imageUrl;
+
+    private String unit;
+
     private Integer quantity;
 
     private Double price;
