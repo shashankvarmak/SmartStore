@@ -2,6 +2,7 @@ package com.smartstore.backend.service;
 
 import com.smartstore.backend.dto.AuthResponse;
 import com.smartstore.backend.dto.LoginRequest;
+import com.smartstore.backend.dto.ProfileResponse;
 import com.smartstore.backend.dto.RegisterRequest;
 import com.smartstore.backend.entity.User;
 import com.smartstore.backend.enums.Role;
@@ -9,6 +10,8 @@ import com.smartstore.backend.repository.UserRepository;
 import com.smartstore.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,5 +58,22 @@ public class AuthService {
         String token = jwtService.generateToken(user.getEmail());
 
         return new AuthResponse(token);
+    }
+
+    public ProfileResponse getProfile() {
+
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        String email = authentication.getName();
+
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+
+        return new ProfileResponse(user.getId(),user.getName(), user.getPhoneNumber(), user.getEmail());
     }
 }

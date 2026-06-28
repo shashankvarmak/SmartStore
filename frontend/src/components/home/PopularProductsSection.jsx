@@ -3,36 +3,45 @@ import ProductCard from "../ui/ProductCard";
 
 function PopularProductsSection() {
 
-   const products = [
-       {
-           id: 1,
-           name: "Fresh Tomatoes",
-           price: 40,
-           imageUrl: "https://placehold.co/600x400",
-           unit: "kg"
-       },
-       {
-           id: 2,
-           name: "Amul Milk",
-           price: 32,
-           imageUrl: "https://placehold.co/600x400",
-            unit: "liter"
-       },
-       {
-           id: 3,
-           name: "Britannia Bread",
-           price: 45,
-           imageUrl: "https://placehold.co/600x400",
-           unit: "loaf"
-       },
-       {
-           id: 4,
-           name: "Basmati Rice",
-           price: 699,
-           imageUrl: "https://placehold.co/600x400",
-           unit: "kg"
-       },
-   ];
+  const featuredProducts = [
+
+      {
+          id: 1,
+          name: "Fresh Tomatoes",
+          price: 40,
+          unit: "kg",
+          imageUrl: "https://picsum.photos/id/292/600/400",
+          quantity: 2
+      },
+
+      {
+          id: 2,
+          name: "Amul Milk",
+          price: 32,
+          unit: "liter",
+          imageUrl: "https://picsum.photos/id/433/600/400",
+          quantity: 1
+      },
+
+      {
+          id: 3,
+          name: "Britannia Bread",
+          price: 45,
+          unit: "loaf",
+          imageUrl: "https://picsum.photos/id/1060/600/400",
+          quantity: 0
+      },
+
+      {
+          id: 4,
+          name: "Basmati Rice",
+          price: 699,
+          unit: "kg",
+          imageUrl: "https://picsum.photos/id/20/600/400",
+          quantity: 3
+      }
+
+  ];
 
     return (
 
@@ -48,7 +57,7 @@ function PopularProductsSection() {
 
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 
-                {products.map((product) => (
+                {featuredProducts.map((product) => (
 
                     <ProductCard
 
@@ -61,6 +70,8 @@ function PopularProductsSection() {
                         imageUrl={product.imageUrl}
 
                         unit={product.unit}
+
+                        quantity={product.quantity}
 
                     />
 
