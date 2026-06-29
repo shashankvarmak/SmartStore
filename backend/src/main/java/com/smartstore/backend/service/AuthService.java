@@ -27,7 +27,8 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            return new AuthResponse("Email already exists");
+
+            return new AuthResponse("Email already exists",Role.CUSTOMER);
         }
 
         User user = User.builder()
@@ -40,7 +41,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return new AuthResponse("Registration Successful");
+        return new AuthResponse("Registration Successful",Role.CUSTOMER);
 
     }
     public AuthResponse login(LoginRequest request) {
@@ -57,7 +58,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getEmail());
 
-        return new AuthResponse(token);
+        return new AuthResponse(token,user.getRole());
     }
 
     public ProfileResponse getProfile() {

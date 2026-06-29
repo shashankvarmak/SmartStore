@@ -47,7 +47,18 @@ function Login() {
 
          const response = await login(loginData);
          saveToken(response.data.token);
-         navigate("/");
+
+         if (response.data.role === "ADMIN") {
+
+             navigate("/admin/dashboard");
+
+         } else {
+
+             navigate("/");
+
+         }
+
+
 
      } catch (error) {
 
